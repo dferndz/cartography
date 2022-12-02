@@ -192,7 +192,8 @@ def write_filtered_data(args, train_dy_metrics):
   sorted_scores = train_dy_metrics.sort_values(by=[args.metric],
                                                ascending=is_ascending)
 
-  original_train_file = os.path.join(os.path.join(args.data_dir, args.task_name), f"train.tsv")
+  train_sub_file = f"train.jsonl" if args.task_name == 'SQUAD' else f"train.tsv"
+  original_train_file = os.path.join(os.path.join(args.data_dir, args.task_name), train_sub_file)
   train_numeric, header = read_data(original_train_file, task_name=args.task_name, guid_as_int=True)
 
   for fraction in [0.01, 0.05, 0.10, 0.1667, 0.25, 0.3319, 0.50, 0.75]:
@@ -202,13 +203,15 @@ def write_filtered_data(args, train_dy_metrics):
       os.makedirs(outdir)
 
     # Dev and test need not be subsampled.
-    copy_dev_test(args.task_name,
-                  from_dir=os.path.join(args.data_dir, args.task_name),
-                  to_dir=outdir)
+    if args.task_name != "SQUAD":
+        copy_dev_test(args.task_name,
+                      from_dir=os.path.join(args.data_dir, args.task_name),
+                      to_dir=outdir)
 
     num_samples = int(fraction * len(train_numeric))
-    with open(os.path.join(outdir, f"train.tsv"), "w") as outfile:
-      outfile.write(header + "\n")
+    with open(os.path.join(outdir, "train.jsonl" if args.task_name == "SQUAD" else "train.tsv"), "w") as outfile:
+      if header is not None:
+          outfile.write(header + "\n")
       selected = sorted_scores.head(n=num_samples+1)
       if args.both_ends:
         hardest = sorted_scores.head(n=int(num_samples * 0.7))
@@ -230,7 +233,7 @@ def write_filtered_data(args, train_dy_metrics):
         elif args.task_name == "WINOGRANDE":
           selected_id = str(int(selected_id))
         record = train_numeric[selected_id]
-        outfile.write(record + "\n")
+        outfile.write(record if args.task_name == "SQUAD" else record + "\n")
 
     logger.info(f"Wrote {num_samples} samples to {outdir}.")
 

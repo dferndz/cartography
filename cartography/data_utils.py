@@ -9,7 +9,7 @@ import shutil
 
 from typing import Dict
 
-from cartography.data_utils_glue import read_glue_tsv
+from cartography.data_utils_glue import read_glue_tsv, read_glue_jsonl
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,8 @@ def read_data(file_path: str,
   elif task_name == "QNLI":
     return read_glue_tsv(file_path,
                         guid_index=0)
+  elif task_name == "SQUAD":
+    return read_glue_jsonl(file_path)
   else:
     raise NotImplementedError(f"Reader for {task_name} not implemented.")
 
