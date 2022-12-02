@@ -54,11 +54,15 @@ def read_training_dynamics(model_dir: os.path,
   for epoch_num in tqdm.tqdm(range(num_epochs)):
     epoch_file = os.path.join(td_dir, f"dynamics_epoch_{epoch_num}.jsonl")
     assert os.path.exists(epoch_file)
+    seen_this_epoch = set()
 
     with open(epoch_file, "r") as infile:
       for line in infile:
         record = json.loads(line.strip())
         guid = record[id_field] if not strip_last else record[id_field][:-1]
+        if guid in seen_this_epoch:
+          continue
+        seen_this_epoch.add(guid)
         if guid not in train_dynamics:
           assert epoch_num == 0
           train_dynamics[guid] = {"gold": record["gold"], "logits": []}

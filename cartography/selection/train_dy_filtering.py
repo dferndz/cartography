@@ -192,8 +192,9 @@ def write_filtered_data(args, train_dy_metrics):
   sorted_scores = train_dy_metrics.sort_values(by=[args.metric],
                                                ascending=is_ascending)
 
+  train_sub_dir = 'squad' if args.task_name == 'SQUAD' else args.task_name
   train_sub_file = f"train.jsonl" if args.task_name == 'SQUAD' else f"train.tsv"
-  original_train_file = os.path.join(os.path.join(args.data_dir, args.task_name), train_sub_file)
+  original_train_file = os.path.join(os.path.join(args.data_dir, train_sub_dir), train_sub_file)
   train_numeric, header = read_data(original_train_file, task_name=args.task_name, guid_as_int=True)
 
   for fraction in [0.01, 0.05, 0.10, 0.1667, 0.25, 0.3319, 0.50, 0.75]:
