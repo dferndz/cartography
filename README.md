@@ -2,6 +2,8 @@
 
 ## SQUAD Support
 
+Paper: [Dataset Cartography for Question Answering](https://github.com/dferndz/cartography/blob/main/fernandez-squad-cartography.pdf)  
+
 Original paper for Dataset Cartography [Dataset Cartography: Mapping and Diagnosing Datasets with Training Dynamics](https://aclanthology.org/2020.emnlp-main.746) at EMNLP 2020.  
 
 Original repo: [Dataset Cartography](https://github.com/allenai/cartography).
@@ -84,3 +86,13 @@ python -m cartography.selection.train_dy_filtering \
     --filtering_output_dir ./filtered_train_data
 ```
 
+## Citation
+If using, cite:
+```
+@misc{fernandez:22,
+    title={Dataset Artifacts and Cartography in Question Answering},
+    author={Daniel Fernandez},
+    url={https://github.com/dferndz/cartography/raw/main/fernandez-squad-cartography.pdf},
+    year={2022}
+}
+```
